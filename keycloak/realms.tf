@@ -25,7 +25,7 @@ resource "keycloak_user" "users" {
   last_name  = each.value.last_name
 
   dynamic "initial_password" {
-    for_each = toset(each.value.initial_password == null ? [] : [each.value.initial_password])
+    for_each = toset(compact([each.value.initial_password]))
     content {
       temporary = true
       value     = initial_password.value
