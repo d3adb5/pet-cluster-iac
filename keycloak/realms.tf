@@ -5,7 +5,7 @@ resource "keycloak_realm" "laboratory" {
   display_name      = "Laboratory"
   display_name_html = "<strong>Laboratory</strong>"
 
-  login_theme = "base"
+  login_theme = "keycloak"
 
   default_signature_algorithm = "RS256"
 }
