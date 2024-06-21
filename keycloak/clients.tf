@@ -1,17 +1,17 @@
 resource "keycloak_openid_client_scope" "groups" {
-  realm_id = keycloak_realm.laboratory.id
+  realm_id = keycloak_realm.core.id
   name     = "groups"
 }
 
 resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
-  realm_id        = keycloak_realm.laboratory.id
+  realm_id        = keycloak_realm.core.id
   claim_name      = "groups"
   name            = "groups"
   client_scope_id = keycloak_openid_client_scope.groups.id
 }
 
 resource "keycloak_openid_client" "argocd" {
-  realm_id  = keycloak_realm.laboratory.id
+  realm_id  = keycloak_realm.core.id
   client_id = "argocd"
 
   name    = "Argo CD"
@@ -35,7 +35,7 @@ resource "keycloak_openid_client" "argocd" {
 }
 
 resource "keycloak_openid_client_default_scopes" "argocd" {
-  realm_id  = keycloak_realm.laboratory.id
+  realm_id  = keycloak_realm.core.id
   client_id = keycloak_openid_client.argocd.id
 
   default_scopes = [
@@ -50,7 +50,7 @@ resource "keycloak_openid_client_default_scopes" "argocd" {
 }
 
 resource "keycloak_openid_client_optional_scopes" "argocd" {
-  realm_id  = keycloak_realm.laboratory.id
+  realm_id  = keycloak_realm.core.id
   client_id = keycloak_openid_client.argocd.id
 
   optional_scopes = [
