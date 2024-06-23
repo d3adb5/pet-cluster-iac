@@ -10,34 +10,45 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
   client_scope_id = keycloak_openid_client_scope.groups.id
 }
 
-resource "keycloak_openid_client" "argocd" {
-  realm_id  = keycloak_realm.core.id
-  client_id = "argocd"
+moved {
+  from = keycloak_openid_client.argocd
+  to   = keycloak_openid_client.this["argocd"]
+}
 
-  name                  = "Argo CD"
-  enabled               = true
+moved {
+  from = keycloak_openid_client_default_scopes.argocd
+  to   = keycloak_openid_client_default_scopes.this["argocd"]
+}
+
+moved {
+  from = keycloak_openid_client_optional_scopes.argocd
+  to   = keycloak_openid_client_optional_scopes.this["argocd"]
+}
+
+resource "keycloak_openid_client" "this" {
+  for_each = var.clients
+
+  realm_id  = keycloak_realm.core.id
+  client_id = each.key
+
+  name                  = each.value.name
+  enabled               = each.value.enabled
   standard_flow_enabled = true
 
   access_type        = "CONFIDENTIAL"
   use_refresh_tokens = false
-  root_url           = "https://argo.d3adb5.net"
+  root_url           = each.value.root_url
 
-  valid_post_logout_redirect_uris = [
-    "+",
-  ]
-
-  valid_redirect_uris = [
-    "https://argo.d3adb5.net/auth/callback",
-  ]
-
-  web_origins = [
-    "https://argo.d3adb5.net",
-  ]
+  web_origins                     = coalesce(each.value.web_origins, [each.value.root_url])
+  valid_redirect_uris             = each.value.valid_redirect_uris
+  valid_post_logout_redirect_uris = each.value.valid_post_logout_redirect_uris
 }
 
-resource "keycloak_openid_client_default_scopes" "argocd" {
+resource "keycloak_openid_client_default_scopes" "this" {
+  for_each = keycloak_openid_client.this
+
   realm_id  = keycloak_realm.core.id
-  client_id = keycloak_openid_client.argocd.id
+  client_id = each.value.id
 
   default_scopes = [
     "acr",
@@ -50,9 +61,11 @@ resource "keycloak_openid_client_default_scopes" "argocd" {
   ]
 }
 
-resource "keycloak_openid_client_optional_scopes" "argocd" {
+resource "keycloak_openid_client_optional_scopes" "this" {
+  for_each = keycloak_openid_client.this
+
   realm_id  = keycloak_realm.core.id
-  client_id = keycloak_openid_client.argocd.id
+  client_id = each.value.id
 
   optional_scopes = [
     "address",

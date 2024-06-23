@@ -26,3 +26,17 @@ variable "users" {
     last_name        = optional(string)
   }))
 }
+
+variable "clients" {
+  description = "OIDC clients to be provisioned through this module."
+
+  type = map(object({
+    name     = string
+    enabled  = optional(bool, true)
+    root_url = string
+
+    web_origins                     = optional(list(string))
+    valid_redirect_uris             = list(string)
+    valid_post_logout_redirect_uris = optional(list(string), ["+"])
+  }))
+}
