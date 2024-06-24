@@ -41,3 +41,9 @@ variable "clients" {
     valid_post_logout_redirect_uris = optional(list(string), ["+"])
   }))
 }
+
+variable "groups" {
+  description = "Top level groups to be created in the main realm."
+  default     = []
+  type        = list(string)
+}
