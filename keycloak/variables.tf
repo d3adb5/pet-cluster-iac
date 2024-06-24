@@ -29,6 +29,7 @@ variable "users" {
 
 variable "clients" {
   description = "OIDC clients to be provisioned through this module."
+  default     = {}
 
   type = map(object({
     name     = string
