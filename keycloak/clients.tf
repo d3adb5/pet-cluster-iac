@@ -10,21 +10,6 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
   client_scope_id = keycloak_openid_client_scope.groups.id
 }
 
-moved {
-  from = keycloak_openid_client.argocd
-  to   = keycloak_openid_client.this["argocd"]
-}
-
-moved {
-  from = keycloak_openid_client_default_scopes.argocd
-  to   = keycloak_openid_client_default_scopes.this["argocd"]
-}
-
-moved {
-  from = keycloak_openid_client_optional_scopes.argocd
-  to   = keycloak_openid_client_optional_scopes.this["argocd"]
-}
-
 resource "keycloak_openid_client" "this" {
   for_each = var.clients
 
