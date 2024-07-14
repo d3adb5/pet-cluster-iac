@@ -24,6 +24,7 @@ variable "users" {
     initial_password = optional(string)
     first_name       = optional(string)
     last_name        = optional(string)
+    groups           = optional(list(string), [])
   }))
 }
 
